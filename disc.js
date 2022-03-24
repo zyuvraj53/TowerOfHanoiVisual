@@ -7,12 +7,6 @@ class Disc {
         this.DiscNum = DiscNum;
         this.w = w;
         this.h = 30; // we'll fix this later to map it to how many discs there are
-        
-    }
-
-    show() {
-        // fill(map(this.w, 0, 100, 0, 255));
-
         let towerX;
 
         switch (this.tower) {
@@ -26,8 +20,14 @@ class Disc {
                 towerX = 5 * width / 6;
                 break;
         }
-        this.x = towerX;
+        this.x = floor(towerX);
         this.y = height - (this.DiscNum * this.h);
+    }
+
+    show() {
+        // fill(map(this.w, 0, 100, 0, 255));
+        console.log('it works')
+
         rectMode(CENTER)
         strokeWeight(2);
         let discColor = floor(map(this.w, 0, width / 2 - width / 3, 0, 255));

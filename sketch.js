@@ -3,28 +3,27 @@
 var NumOfDiscsSelection;
 let n;
 let discs = [];
-let pillars = [];
-let a = [];
-let b = [];
-let c = [];
+var pillars = {};
+
 
 function move(source, target) {
   let maxHeight = (height / 2) - 200;
   let v = 5;
-
+  // console.log(source.discs[0].x)
 
   // move the disc UP
-  while (source[0].y > maxHeight){
-    source[0].y -= v;
+  while (source.discs[0].y > maxHeight){
+    source.discs[0].y -= v;
   }
 
-  while (source[0].x != target.x){
-    source[0].y -= v;
+  // move the disc left or right
+  while (source.discs[0].x != target.x){
+    source.discs[0].y -= v;
   } 
 
 
 
-  console.log("Move from " + source + " to " + target)
+  // console.log("Move from " + source + " to " + target)
 
 
 }
@@ -41,38 +40,28 @@ function TowerOfHanoi(NumOfDiscs, source, aux, target) {
 
 function setup() {
   createCanvas(1000, 600);
+  background(220);
   NumOfDiscsSelection = createSelect();
-  pillars.push(new Pillar(width / 6, 'a', 0));
-  pillars.push(new Pillar(width / 2, 'b', 0));
-  pillars.push(new Pillar(5 * width / 6, 'c', 0));
+  pillars['a'] = new Pillar(floor(width / 6), 'a', []);
+  pillars['b'] = new Pillar(floor(width / 2), 'b', []);
+  pillars['c'] = new Pillar(floor(5 * width / 6), 'c',[]);
   for (let i = 1; i < 100; i++) {
     NumOfDiscsSelection.option(i);
   }
-
-
-
-  // disc1 = new Disc(1, 1, 80);
-  // disc2 = new Disc(1, 2, 60);
-
 }
 
 function draw() {
-  background(220);
   n = NumOfDiscsSelection.value();
   strokeWeight(16);
   stroke(0)
-  line(width/6, height/2, width/6, height)
-  line(width/2, height/2, width/2, height)
-  line(5 * width/6, height/2, 5 * width/6, height)
-  for (let d of a){
-    d.show();
+  for ([letter, pillar] of Object.entries(pillars)){
+    pillar.show();
+    // for (let d of pillar.discs){
+    //   console.log(d)
+    //   d.show();
+    // }
   }
-  for (let d of b){
-    d.show();
-  }
-  for (let d of c){
-    d.show();
-  }
+ 
 
 
 
@@ -84,9 +73,13 @@ function keyPressed() {
     n = parseInt(n);
     for (let i = 0; i < n; i++){
       let newW = map(i + 1, 1, n + 1, 200, 30);
-      a.push(new Disc(1, i + 1, newW));
+      pillars['a'].discs.push(new Disc(1, i + 1, newW));
     }
-    TowerOfHanoi(n, a, b, c)
+    for (let d of pillars['a'].discs){
+      console.log(d)
+      d.show();
+    }
+    TowerOfHanoi(n, pillars['a'], pillars['b'], pillars['c'])
   }
 
 
