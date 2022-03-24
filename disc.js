@@ -25,9 +25,6 @@ class Disc {
     }
 
     show() {
-        // fill(map(this.w, 0, 100, 0, 255));
-        console.log('it works')
-
         rectMode(CENTER)
         strokeWeight(2);
         let discColor = floor(map(this.w, 0, width / 2 - width / 3, 0, 255));
