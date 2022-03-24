@@ -2,11 +2,11 @@
 
 class Disc {
 
-    constructor(tower, DiscNum, w) {
+    constructor(tower, DiscNum, w, h) {
         this.tower = tower;
         this.DiscNum = DiscNum;
         this.w = w;
-        this.h = 30; // we'll fix this later to map it to how many discs there are
+        this.h = h; // we'll fix this later to map it to how many discs there are
         let towerX;
 
         switch (this.tower) {
@@ -25,6 +25,7 @@ class Disc {
     }
 
     show() {
+
         rectMode(CENTER)
         strokeWeight(2);
         let discColor = floor(map(this.w, 0, width / 2 - width / 3, 0, 255));
