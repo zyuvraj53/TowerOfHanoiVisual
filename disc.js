@@ -6,7 +6,7 @@ class Disc {
         this.tower = tower;
         this.DiscNum = DiscNum;
         this.w = w;
-        this.h = h; // we'll fix this later to map it to how many discs there are
+        this.h = h; 
         let towerX;
 
         switch (this.tower) {

@@ -4,6 +4,7 @@ var NumOfDiscsSelection;
 let n;
 let discs = [];
 var pillars = [];
+var moves = [];
 let run = false;
 let showPillars = false;
 let discHeight = 30;
@@ -14,19 +15,22 @@ function move(source, target) {
   if (source.discs.length > 0) {
 
     // move the disc UP
-    console.log('Move from', source.letter, 'to ', target.letter)
+    // console.log('Move from', source.letter, 'to ', target.letter)
     let targetHeight = height - (target.discs.length * discHeight) - discHeight;
-    source.discs[0].x = target.x;
-    source.discs[0].y = targetHeight;
-    temp = source.discs[0]
+    // source.discs[0].x = target.x;
+    // source.discs[0].y = targetHeight;
+    source.discs[source.discs.length].x = target.x;
+    source.discs[source.discs.length].y = targetHeight;
+
+    temp = source.discs[0];
     source.discs.shift();
     target.discs.splice(0, 0, temp);
+    // for (let p of pillars) {
+    //   for (let d of p.discs) {
+    //     d.show();
+    //   }
+    // }
 
-    for (let p of pillars) {
-      for (let d of p.discs) {
-        d.show();
-      }
-    }
 
 
   }
@@ -68,16 +72,64 @@ function move(source, target) {
 
 function TowerOfHanoi(NumOfDiscs, source, aux, target) {
   if (NumOfDiscs != 0) {
-    TowerOfHanoi(NumOfDiscs - 1, source, target, aux)
-    move(source, target)
-    TowerOfHanoi(NumOfDiscs - 1, aux, source, target)
+    // for (let p of pillars) {
+    //   background(220)
+    //   strokeWeight(16);
+    //   stroke(0)
+    //   p.show();
+    //   for (let d of p.discs) {
+    //     d.show();
+    //   }
+    // }
+
+    TowerOfHanoi(NumOfDiscs - 1, source, target, aux);
+    moves.push([source, target]);
+    // console.log('Move from', source.letter, 'to ', target.letter);
+    // move(source, target)
+    TowerOfHanoi(NumOfDiscs - 1, aux, source, target);
+    // for (let p of pillars) {
+    //   // background(220)
+    //   strokeWeight(16);
+    //   stroke(0)
+    //   p.show();
+    //   for (let d of p.discs) {
+    //     d.show();
+    //   }
+    // }
+
   }
+}
+
+
+function runMoves() {
+ 
+  let move = moves[0]
+  let source = move[0];
+  let target = move[1];
+  let sDisc = source.discs[source.discs.length - 1]; // the last disc in the source
+  sDisc.x = target.x; // set source disc x value = target pillar's x value
+  let targetHeight = height - (target.discs.length * discHeight) - discHeight; // set y value for source disc to the top of the target pillar's stack
+  sDisc.y = targetHeight;
+  let tempDisc = source.discs.pop();
+  target.discs.push(tempDisc);
+  console.log('Move from', source.letter, 'to ', target.letter)
+  background(220)
+
+  for (let p of pillars) {
+    strokeWeight(16);
+    stroke(0)
+    p.show();
+    for (let d of p.discs) {
+      d.show();
+    }
+  }
+  moves.shift();
 }
 
 
 
 function setup() {
-  frameRate(2)
+  frameRate(10)
   createCanvas(1000, 600);
   background(220);
   strokeWeight(16);
@@ -99,8 +151,29 @@ function setup() {
 
 function draw() {
   background(220);
-  // strokeWeight(16);
-  // stroke(0)
+  // for (let p of pillars) {
+  //   strokeWeight(16);
+  //   stroke(0)
+  //   p.show();
+  //   for (let d of p.discs) {
+  //     d.show();
+  //   }
+  // }
+  n = parseInt(NumOfDiscsSelection.value());
+
+  if (showPillars) {
+
+    for (let i = 0; i < n; i++) {
+      let newW = map(i + 1, 1, n + 1, 200, 30);
+      pillars[0].discs.push(new Disc(1, i + 1, newW, discHeight));
+      // for (let d of pillars[0].discs) {
+      // d.show();
+      // }
+    }
+    showPillars = false;
+    // console.log(pillars)
+  }
+
   for (let p of pillars) {
     strokeWeight(16);
     stroke(0)
@@ -109,26 +182,17 @@ function draw() {
       d.show();
     }
   }
-  n = parseInt(NumOfDiscsSelection.value());
-
-  if (showPillars) {
-    for (let i = 0; i < n; i++) {
-      let newW = map(i + 1, 1, n + 1, 200, 30);
-      pillars[0].discs.push(new Disc(1, i + 1, newW, discHeight));
-      for (let d of pillars[0].discs) {
-        d.show();
-      }
-    }
-    showPillars = false;
-  }
-
 
   if (run) {
-    TowerOfHanoi(n, pillars[0], pillars[1], pillars[2])
+    TowerOfHanoi(n, pillars[0], pillars[1], pillars[2]);
+    if (frameCount % 5 == 0) {
+      runMoves();
+    }
   }
   if (pillars[2].discs.length == n) {
     noLoop();
   }
+
 
 
 }
